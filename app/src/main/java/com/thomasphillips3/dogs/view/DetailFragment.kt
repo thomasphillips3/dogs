@@ -29,7 +29,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonList.setOnClickListener {
-            val action = detailFragmentDirections.actionListFragment()
+            val action = DetailFragmentDirections.actionListFragment()
             Navigation.findNavController(it).navigate(action)
         }
     }
