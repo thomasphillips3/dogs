@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.thomasphillips3.dogs.view.listFragment"
+        android:name="com.thomasphillips3.dogs.view.ListFragment"
         android:label="listFragment" >
         <action
             android:id="@+id/actionDetailFragment"
@@ -13,10 +13,14 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.thomasphillips3.dogs.view.detailFragment"
+        android:name="com.thomasphillips3.dogs.view.DetailFragment"
         android:label="detailFragment" >
         <action
             android:id="@+id/actionListFragment"
             app:destination="@id/listFragment" />
+        <argument
+            android:name="dogUuid"
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 </navigation>

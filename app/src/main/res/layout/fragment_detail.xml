@@ -5,7 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.listFragment">
+        tools:context=".view.ListFragment">
 
         <TextView
             android:id="@+id/textView2"
@@ -24,6 +24,7 @@
             android:clickable="true"
             android:src="@drawable/ic_list"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:focusable="true" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
