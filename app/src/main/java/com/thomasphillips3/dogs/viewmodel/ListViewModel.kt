@@ -1,6 +1,7 @@
 package com.thomasphillips3.dogs.viewmodel
 
 import android.app.Application
+import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
 import com.thomasphillips3.dogs.model.DogBreed
 import com.thomasphillips3.dogs.model.DogDatabase
@@ -12,7 +13,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 
-class ListViewModel(application: Application): BaseViewModel(application) {
+class ListViewModel(application: Application) : BaseViewModel(application) {
 
     private var prefHelper = SharedPreferencesHelper(getApplication())
     private val dogsService = DogsApiService()
@@ -32,7 +33,7 @@ class ListViewModel(application: Application): BaseViewModel(application) {
             dogsService.getDogs()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableSingleObserver<List<DogBreed>>() {
+                .subscribeWith(object : DisposableSingleObserver<List<DogBreed>>() {
                     override fun onSuccess(dogList: List<DogBreed>) {
                         storeDogsLocally(dogList)
                     }
@@ -65,6 +66,7 @@ class ListViewModel(application: Application): BaseViewModel(application) {
             }
             dogsRetrieved(list)
         }
+        prefHelper.saveUpdateTime(System.nanoTime())
     }
 
     override fun onCleared() {
