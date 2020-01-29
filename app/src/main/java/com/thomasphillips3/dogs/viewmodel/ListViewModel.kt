@@ -1,7 +1,7 @@
 package com.thomasphillips3.dogs.viewmodel
 
 import android.app.Application
-import androidx.core.content.edit
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.thomasphillips3.dogs.model.DogBreed
 import com.thomasphillips3.dogs.model.DogDatabase
@@ -16,6 +16,8 @@ import kotlinx.coroutines.*
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
     private var prefHelper = SharedPreferencesHelper(getApplication())
+    private val refreshTime = 5 * 60 * 1000 * 1000 * 1000L
+
     private val dogsService = DogsApiService()
     private val disposable = CompositeDisposable()
 
@@ -24,7 +26,25 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     val loading = MutableLiveData<Boolean>()
 
     fun refresh() {
+        val updateTime: Long? = prefHelper.getUpdateTime()
+        if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
+            fetchFromDatabase()
+        } else {
+            fetchFromRemote()
+        }
+    }
+
+    fun refreshBypassCache() {
         fetchFromRemote()
+    }
+
+    private fun fetchFromDatabase() {
+        loading.value = true
+        launch {
+            val dogs = DogDatabase(getApplication()).dogDao().getAllDogs()
+            dogsRetrieved(dogs)
+            Log.i(TAG, "Dogs fetched from db")
+        }
     }
 
     private fun fetchFromRemote() {
@@ -36,6 +56,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
                 .subscribeWith(object : DisposableSingleObserver<List<DogBreed>>() {
                     override fun onSuccess(dogList: List<DogBreed>) {
                         storeDogsLocally(dogList)
+                        Log.i(TAG, "Dogs fetched from endpoint")
                     }
 
                     override fun onError(e: Throwable) {
@@ -72,5 +93,9 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         disposable.clear()
+    }
+
+    companion object {
+        private const val TAG = "ListViewModel"
     }
 }
