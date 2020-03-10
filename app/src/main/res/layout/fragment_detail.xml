@@ -5,10 +5,15 @@
         <variable
             name="dog"
             type="com.thomasphillips3.dogs.model.DogBreed" />
+        
+        <variable
+            name="palette"
+            type="com.thomasphillips3.dogs.model.DogPalette" />
     </data>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{palette.color}"
         tools:context=".view.DetailFragment">
         <ImageView
             android:id="@+id/dogImage"
