@@ -8,4 +8,5 @@
     <string name="dog_image">Dog image</string>
     <string name="dog_purpose">Dog purpose</string>
     <string name="dog_temperament">Dog temperament</string>
+    <string name="settings">Settings</string>
 </resources>
