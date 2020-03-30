@@ -13,11 +13,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
+import java.lang.NumberFormatException
 
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
     private var prefHelper = SharedPreferencesHelper(getApplication())
-    private val refreshTime = 5 * 60 * 1000 * 1000 * 1000L
+    private var refreshTime = 5 * 60 * 1000 * 1000 * 1000L
 
     private val dogsService = DogsApiService()
     private val disposable = CompositeDisposable()
@@ -27,6 +28,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     val loading = MutableLiveData<Boolean>()
 
     fun refresh() {
+        checkCacheDuration()
         val updateTime: Long? = prefHelper.getUpdateTime()
         if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
             fetchFromDatabase()
@@ -35,8 +37,14 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun refreshBypassCache() {
-        fetchFromRemote()
+    private fun checkCacheDuration() {
+        val cachePreference = prefHelper.getCacheDuration()
+        try {
+            val cachePreferenceInt = cachePreference?.toInt() ?: 5 * 60
+            refreshTime = cachePreferenceInt.times(1000 * 1000 * 1000L)
+        } catch (e: NumberFormatException) {
+            e.printStackTrace()
+        }
     }
 
     private fun fetchFromDatabase() {
@@ -46,6 +54,10 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
             dogsRetrieved(dogs)
             Log.i(TAG, "Dogs fetched from db")
         }
+    }
+
+    fun refreshBypassCache() {
+        fetchFromRemote()
     }
 
     private fun fetchFromRemote() {
