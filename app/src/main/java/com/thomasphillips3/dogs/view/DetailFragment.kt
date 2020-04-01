@@ -25,6 +25,7 @@ import com.thomasphillips3.dogs.model.DogBreed
 import com.thomasphillips3.dogs.model.DogPalette
 import com.thomasphillips3.dogs.model.SmsInfo
 import com.thomasphillips3.dogs.viewmodel.DetailViewModel
+import org.w3c.dom.Text
 
 /**
  * A simple [Fragment] subclass.
@@ -106,6 +107,12 @@ class DetailFragment : Fragment() {
             }
 
             R.id.action_share -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Peep this dog, dog")
+                intent.putExtra(Intent.EXTRA_TEXT, "${currentDog?.dogBreed} bred for ${currentDog?.bredFor}")
+                intent.putExtra(Intent.EXTRA_STREAM, currentDog?.imageUrl)
+                startActivity(Intent.createChooser(intent, "Share with"))
             }
         }
         return super.onOptionsItemSelected(item)
