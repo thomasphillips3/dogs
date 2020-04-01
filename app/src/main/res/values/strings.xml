@@ -9,4 +9,6 @@
     <string name="dog_purpose">Dog purpose</string>
     <string name="dog_temperament">Dog temperament</string>
     <string name="settings">Settings</string>
+    <string name="send_sms">Send SMS</string>
+    <string name="share">Share</string>
 </resources>
